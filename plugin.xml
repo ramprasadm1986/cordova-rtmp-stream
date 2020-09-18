@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="com.kytics.ramprasad.rtmpandrtspstreamer" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-rtmp-stream" version="1.0.2" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>VideoStream</name>
     
     
@@ -36,7 +36,7 @@
 			<uses-permission android:name="android.permission.WAKE_LOCK" />
         </config-file>
         
-        <source-file src="src/android/VideoStream.java" target-dir="src/com/kytics/ramprasad/rtmpandrtspstreamer/VideoStream"/>
+
         
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.kytics.ramprasad.rtmpandrtspstreamer.RTMPActivity" android:screenOrientation="landscape"/>

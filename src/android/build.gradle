@@ -1,0 +1,8 @@
+repositories {
+    maven { url "https://jitpack.io" }
+    maven { url "https://maven.google.com" }
+}
+
+dependencies {
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.5.1'
+}

@@ -1,0 +1,41 @@
+{
+  "name": "cordova-rtmp-stream",
+  "version": "1.0.0",
+  "description": "Cross-platform plugin for Cordova / PhoneGap to to easily stream RTMP",
+  "cordova": {
+    "id": "cordova-rtmp-stream",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ramprasadm1986/cordova-rtmp-stream.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=8.0.0"
+    },
+    {
+      "name": "cordova-android",
+      "version": ">=5.0.0"
+    },
+    {
+      "name": "cordova-ios",
+      "version": ">=6.1.1"
+    }
+  ],
+  "author": "ramprasadm1986",
+  "license": "Apache License 2.0",
+  "bugs": {
+    "url": "https://github.com/ramprasadm1986/cordova-rtmp-stream/issues"
+  },
+  "homepage": "https://github.com/ramprasadm1986/cordova-rtmp-stream#readme"
+}

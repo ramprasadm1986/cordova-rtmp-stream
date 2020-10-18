@@ -1,6 +1,6 @@
 {
   "name": "cordova-rtmp-stream",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Cross-platform plugin for Cordova / PhoneGap to to easily stream RTMP",
   "cordova": {
     "id": "cordova-rtmp-stream",

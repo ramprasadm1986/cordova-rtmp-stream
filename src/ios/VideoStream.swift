@@ -1,6 +1,25 @@
 import AVFoundation
 import HaishinKit
 import UIKit
+import VideoToolbox
+
+extension UIColor {
+   convenience init(red: Int, green: Int, blue: Int) {
+       assert(red >= 0 && red <= 255, "Invalid red component")
+       assert(green >= 0 && green <= 255, "Invalid green component")
+       assert(blue >= 0 && blue <= 255, "Invalid blue component")
+
+       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+   }
+
+   convenience init(rgb: Int) {
+       self.init(
+           red: (rgb >> 16) & 0xFF,
+           green: (rgb >> 8) & 0xFF,
+           blue: rgb & 0xFF
+       )
+   }
+}
 
 @objc(VideoStream) class VideoStream : CDVPlugin {
     
@@ -10,6 +29,7 @@ import UIKit
     var closeButton: UIButton? = nil
     var streamName: String = ""
     var command:CDVInvokedUrlCommand? = nil
+    var maskview : UIView? = nil
   
   @objc(echo:)
   func echo(_ command: CDVInvokedUrlCommand) {
@@ -69,10 +89,33 @@ func streamRTMP(_ command: CDVInvokedUrlCommand) {
         
         self.rtmpConnection = RTMPConnection()
         self.rtmpStream = RTMPStream(connection: rtmpConnection!)
+    
+        self.rtmpStream?.captureSettings = [
+          .fps: 30, // FPS
+          .sessionPreset: AVCaptureSession.Preset.medium, // input video width/height
+          .isVideoMirrored: false,
+          .continuousAutofocus: false, // use camera autofocus mode
+          .continuousExposure: false, //  use camera exposure mode
+          .preferredVideoStabilizationMode: AVCaptureVideoStabilizationMode.auto
+        ]
+        self.rtmpStream?.audioSettings = [
+          .muted: false, // mute audio
+          .bitrate: 32 * 1000,
+        ]
+       self.rtmpStream?.videoSettings = [
+          .width: 845, // video output width
+          .height: 480, // video output height
+          .bitrate: 2 * 1000, // video output bitrate
+          .profileLevel: kVTProfileLevel_H264_Baseline_3_1, // H264 Profile require "import VideoToolbox"
+          .maxKeyFrameIntervalDuration: 2, // key frame / sec
+        ]
+    
+    
+    
         self.rtmpStream?.attachAudio(AVCaptureDevice.default(for: AVMediaType.audio)) { error in
             print(error)
         }
-       self.rtmpStream?.attachCamera(DeviceUtil.device(withPosition: .back)) { error in
+       self.rtmpStream?.attachCamera(DeviceUtil.device(withPosition: .front)) { error in
             print(error)
         }
         let view = viewController.view
@@ -86,14 +129,24 @@ func streamRTMP(_ command: CDVInvokedUrlCommand) {
        self.closeButton = UIButton(type: .system)
        
        // Position Button
-        self.closeButton?.frame = CGRect(x: 20, y: 20, width: 100, height: 50)
+        self.closeButton?.frame = CGRect(x: 10, y: 20, width: 60, height: 40)
    
        // Set text on button
         self.closeButton?.setTitle("Close", for: .normal)
-        self.closeButton?.setTitle("Close", for: .highlighted)
+        
+        //self.closeButton?.setTitleColor(.red, for: .normal)
+        self.closeButton?.backgroundColor = UIColor.darkGray
+        self.closeButton?.tintColor = UIColor(rgb: 0x404040)
+        
        
        // Set button action
       
+    
+        self.maskview = UIView(frame: CGRect(x: 0, y: 0, width: (view?.bounds.width)!, height: (view?.bounds.height)!))
+      
+        self.maskview?.backgroundColor = UIColor(white: 0, alpha: 1)
+    
+        view?.addSubview(self.maskview!)
        
         view?.addSubview(self.closeButton!)
   
@@ -131,11 +184,12 @@ func streamRTMP(_ command: CDVInvokedUrlCommand) {
     @objc private func stopStream(){
         
         rtmpConnection?.close()
-        rtmpStream?.close()
-        rtmpStream?.dispose()
-        rtmpStream?.attachCamera(nil)
+        //rtmpStream?.close()
+       // rtmpStream?.dispose()
+       // rtmpStream?.attachCamera(nil)
         
         closeButton?.removeFromSuperview()
+        maskview?.removeFromSuperview()
         hkView?.removeFromSuperview()
         
         UIApplication.shared.isIdleTimerDisabled = false
